@@ -60,7 +60,7 @@ pub fn truncate(
   |> string.to_option
   |> option.map(fn(text) {
     text
-    |> take_first(count)
+    |> take_first(count - string.length(suffix))
     |> string.append(suffix)
   })
   |> option.unwrap("")

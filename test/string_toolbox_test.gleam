@@ -28,6 +28,6 @@ pub fn truncate_test() {
       up_to: 10,
       end_with: "...",
     )
-    == "Hello, wor..."
+    == "Hello, ..."
   assert truncate("", up_to: 5, end_with: "*") == ""
 }
