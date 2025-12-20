@@ -1,5 +1,6 @@
 import gleam/list
 import gleam/option.{type Option, None, Some}
+import gleam/result
 import gleam/string
 
 pub fn reverse_string(s: String) -> String {
@@ -74,6 +75,41 @@ fn take_first(text: String, n: Int) -> String {
   }
 }
 
-pub fn to_snake_case(text: String) -> String {
-  todo
+pub fn to_snake_case(camel_case_text: String) {
+  let letters =
+    camel_case_text
+    |> string.to_graphemes
+
+  let last_index = list.length(letters) - 1
+  let words_indexes =
+    letters
+    |> list.zip(list.range(0, last_index))
+    |> list.filter_map(fn(letter_and_i) {
+      let #(letter, i) = letter_and_i
+
+      case is_upper_letter(letter) {
+        True -> Ok(i)
+        False -> Error(Nil)
+      }
+    })
+    |> list.prepend(0)
+    |> list.append([last_index + 1])
+    |> list.window_by_2
+
+  let words =
+    words_indexes
+    |> list.map(fn(start_and_end) {
+      let #(start, end) = start_and_end
+      string.slice(camel_case_text, start, end - start)
+    })
+
+  words |> list.map(string.lowercase) |> string.join("_")
+}
+
+fn is_upper_letter(grapheme: String) -> Bool {
+  is_latin_letter(grapheme) && grapheme == string.uppercase(grapheme)
+}
+
+fn is_lower_letter(grapheme: String) -> Bool {
+  is_latin_letter(grapheme) && grapheme == string.lowercase(grapheme)
 }
